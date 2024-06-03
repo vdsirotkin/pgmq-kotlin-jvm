@@ -18,7 +18,7 @@ jobs:
           cache: maven
 
       - name: Publish to Apache Maven Central
-        run: mvn deploy --file pom.xml
+        run: mvn -B deploy
         env:
           MAVEN_USERNAME: 1r1zoiRZ
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
