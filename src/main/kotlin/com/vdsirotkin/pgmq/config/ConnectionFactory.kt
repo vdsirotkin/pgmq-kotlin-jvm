@@ -1,4 +1,4 @@
-package com.vdsirotkin.pgmq
+package com.vdsirotkin.pgmq.config
 
 import java.sql.Connection
 

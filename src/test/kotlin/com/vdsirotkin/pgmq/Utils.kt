@@ -1,8 +1,8 @@
 package com.vdsirotkin.pgmq
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.vdsirotkin.pgmq.PgmqClientTest.Companion.pgsql
-import org.slf4j.Logger
+import com.vdsirotkin.pgmq.config.ConnectionFactory
+import com.vdsirotkin.pgmq.config.PgmqConfiguration
 import org.slf4j.LoggerFactory
 import java.sql.Connection
 import java.sql.DriverManager
@@ -14,7 +14,6 @@ object TestConfiguration : PgmqConfiguration {
 }
 
 val objectMapper = jacksonObjectMapper().findAndRegisterModules()
-
 
 class TestConnection(private val connection: Connection) : Connection by connection {
     override fun close() {
@@ -31,7 +30,11 @@ class TestConnection(private val connection: Connection) : Connection by connect
     }
 }
 
-class TestConnectionFactory(private val jdbcUrl: String, private val username: String, private val password: String,) : ConnectionFactory {
+class TestConnectionFactory(
+    private val jdbcUrl: String,
+    private val username: String,
+    private val password: String,
+) : ConnectionFactory {
     lateinit var connection: TestConnection
 
     fun prepareConnection() {

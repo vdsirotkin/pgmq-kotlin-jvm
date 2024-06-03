@@ -3,6 +3,7 @@ package com.vdsirotkin.pgmq
 import assertk.all
 import assertk.assertThat
 import assertk.assertions.*
+import com.vdsirotkin.pgmq.domain.PgmqEntry
 import com.vdsirotkin.pgmq.serialization.JacksonPgmqSerializationProvider
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -12,8 +13,7 @@ import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import org.testcontainers.utility.DockerImageName
-import java.sql.Connection
-import java.sql.DriverManager
+import kotlin.time.Duration.Companion.ZERO
 import kotlin.time.Duration.Companion.seconds
 
 @Testcontainers
@@ -136,18 +136,70 @@ class PgmqClientTest {
 
     @Test
     fun archive() {
+        underTest.createQueue("test")
+
+        val messageId = underTest.send("test", TestMessage("My cool message"))
+
+        val archived = underTest.archive("test", messageId)
+
+        assertThat(archived).isTrue()
+
+        var counter = 0
+        connectionFactory.connection.prepareStatement("select * from pgmq.a_test").use {
+            it.executeQuery().use { rs ->
+                while (rs.next()) {
+                    counter++
+                }
+            }
+        }
+        assertThat(counter).isEqualTo(1)
+
+        underTest.dropQueue("test")
     }
 
     @Test
     fun delete() {
-    }
+        underTest.createQueue("test")
 
-    @Test
-    fun testDelete() {
+        val messageId = underTest.send("test", TestMessage("My cool message"))
+
+        val archived = underTest.delete("test", messageId)
+
+        assertThat(archived).isTrue()
+
+        var counter = 0
+        connectionFactory.connection.prepareStatement("select * from pgmq.a_test").use {
+            it.executeQuery().use { rs ->
+                while (rs.next()) {
+                    counter++
+                }
+            }
+        }
+        assertThat(counter).isEqualTo(0)
+        connectionFactory.connection.prepareStatement("select * from pgmq.q_test").use {
+            it.executeQuery().use { rs ->
+                while (rs.next()) {
+                    counter++
+                }
+            }
+        }
+        assertThat(counter).isEqualTo(0)
     }
 
     @Test
     fun purge() {
+        underTest.createQueue("test")
+
+        underTest.send("test", TestMessage(""))
+
+        var intermediateResult = underTest.readBatch("test", 1, ZERO)
+        assertThat(intermediateResult).isNotEmpty()
+
+        val actual = underTest.purge("test")
+        assertThat(actual).isEqualTo(1)
+
+        intermediateResult = underTest.readBatch("test", 1, ZERO)
+        assertThat(intermediateResult).isEmpty()
     }
 
     data class TestMessage(val text: String)
