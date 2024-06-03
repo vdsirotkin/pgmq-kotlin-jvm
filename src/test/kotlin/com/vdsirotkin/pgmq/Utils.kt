@@ -1,16 +1,17 @@
 package com.vdsirotkin.pgmq
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.vdsirotkin.pgmq.config.ConnectionFactory
+import com.vdsirotkin.pgmq.config.PgmqConnectionFactory
 import com.vdsirotkin.pgmq.config.PgmqConfiguration
 import org.slf4j.LoggerFactory
 import java.sql.Connection
 import java.sql.DriverManager
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 
 object TestConfiguration : PgmqConfiguration {
-    override val defaultVisibilityTimeout: Duration = 10.seconds
+    override val defaultVisibilityTimeout: java.time.Duration = 10.seconds.toJavaDuration()
 }
 
 val objectMapper = jacksonObjectMapper().findAndRegisterModules()
@@ -34,7 +35,7 @@ class TestConnectionFactory(
     private val jdbcUrl: String,
     private val username: String,
     private val password: String,
-) : ConnectionFactory {
+) : PgmqConnectionFactory {
     lateinit var connection: TestConnection
 
     fun prepareConnection() {
