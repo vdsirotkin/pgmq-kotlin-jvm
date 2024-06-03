@@ -1,6 +1,8 @@
 # pgmq-kotlin-jvm
 
 [![codecov](https://codecov.io/gh/vdsirotkin/pgmq-kotlin-jvm/graph/badge.svg?token=GAXNOBXHKX)](https://codecov.io/gh/vdsirotkin/pgmq-kotlin-jvm)
+[![Sonatype Nexus (Releases)](https://img.shields.io/nexus/r/com.vdsirotkin.pgmq/pgmq-kotlin-jvm?server=https%3A%2F%2Foss.sonatype.org&label=central)](https://central.sonatype.com/artifact/com.vdsirotkin.pgmq/pgmq-kotlin-jvm)
+
 
 A Kotlin client, based on pure JDBC, for [Postgres Message Queue](https://github.com/tembo-io/pgmq) (PGMQ).
 
