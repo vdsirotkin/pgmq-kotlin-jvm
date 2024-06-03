@@ -2,7 +2,7 @@
 
 [![codecov](https://codecov.io/gh/vdsirotkin/pgmq-kotlin-jvm/graph/badge.svg?token=GAXNOBXHKX)](https://codecov.io/gh/vdsirotkin/pgmq-kotlin-jvm)
 [![Maven Central Version](https://img.shields.io/maven-central/v/com.vdsirotkin.pgmq/pgmq-kotlin-jvm)](https://central.sonatype.com/artifact/com.vdsirotkin.pgmq/pgmq-kotlin-jvm)
-
+![Dynamic XML Badge](https://img.shields.io/badge/dynamic/xml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fvdsirotkin%2Fpgmq-kotlin-jvm%2Fmain%2Fpom.xml&query=%2F%2F*%5Blocal-name()%3D'kotlin.version'%5D&label=kotlin)
 
 A Kotlin client, based on pure JDBC, for [Postgres Message Queue](https://github.com/tembo-io/pgmq) (PGMQ).
 
